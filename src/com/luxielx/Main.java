@@ -1,16 +1,19 @@
 package com.luxielx;
 
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.concurrent.TimeUnit;
 
 public class Main extends JavaPlugin {
 //    FileConfiguration config;
+private static Permission perms = null;
 
     @Override
     public void onEnable() {
@@ -18,6 +21,9 @@ public class Main extends JavaPlugin {
         saveDefaultConfig();
         ConfigManager.getInstance().createNewCustomConfig("banlist.yml");
         getServer().getPluginManager().registerEvents(new JoinEvent(), this);
+        if (getServer().getPluginManager().getPlugin("Vault") != null) {
+            setupPermissions();
+        }
     }
 
 
@@ -26,11 +32,15 @@ public class Main extends JavaPlugin {
 
     }
 
-
+    private boolean setupPermissions() {
+        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+        perms = rsp.getProvider();
+        return perms != null;
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String arg, String[] args) {
         // /ban {player} {reason}
-        if (cmd.getName().equalsIgnoreCase("ban")) {
+        if (cmd.getName().equalsIgnoreCase("ban") && perms.has(sender,"guccibans.ban")) {
             if (args.length > 0) {
                 if (Bukkit.getPlayer(args[0]) != null) {
                     String reason = "";
@@ -46,7 +56,7 @@ public class Main extends JavaPlugin {
             }
 
             // unban {player}
-        } else if (cmd.getName().equalsIgnoreCase("unban")) {
+        } else if (cmd.getName().equalsIgnoreCase("unban")&& perms.has(sender,"guccibans.unban")) {
             if (args.length > 0) {
                 if (!Bukkit.getOfflinePlayer(args[0]).hasPlayedBefore()) return false;
                 OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
@@ -55,7 +65,7 @@ public class Main extends JavaPlugin {
 
             //tempban {player} {duration} {reason}
             //
-        } else if (cmd.getName().equalsIgnoreCase("checkban")) {
+        } else if (cmd.getName().equalsIgnoreCase("checkban")&& perms.has(sender,"guccibans.checkban")) {
             if (args.length > 0) {
                 if (!Bukkit.getOfflinePlayer(args[0]).hasPlayedBefore()) return false;
                 OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
@@ -83,7 +93,7 @@ public class Main extends JavaPlugin {
             }
 
 
-        } else if (cmd.getName().equalsIgnoreCase("tempban")) {
+        } else if (cmd.getName().equalsIgnoreCase("tempban") && perms.has(sender,"guccibans.tempban")) {
             if (args.length > 1) {
                 if (Bukkit.getPlayer(args[0]) != null) {
                     String reason = "";
