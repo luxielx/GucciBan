@@ -1,0 +1,14 @@
+name: GucciBan
+main: com.luxielx.Main
+version: 1
+api-version: 1.16
+softdepend: [Vault]
+commands:
+  ban:
+    description: ban player
+  tempban:
+    description: tempban player
+  unban:
+    description: unban player
+  checkban:
+    description: check player ban stats

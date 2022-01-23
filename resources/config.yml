@@ -1,0 +1,11 @@
+permban:
+  - '&7%banned% was banned %time% ago'
+  - '&7Their ban does not expire'
+  - '&7Reason: %reason%'
+  - '&7Banned by: %staff%'
+tempban:
+  - '&7%banned% was banned %time% ago'
+  - '&7Their ban expired in %timeleft%'
+  - '&7Reason: %reason%'
+  - '&7Banned by: %staff%'
+kickmessage: '&7banned for %reason% by %staff%'
